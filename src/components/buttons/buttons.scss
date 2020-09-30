@@ -1,0 +1,22 @@
+.primary-button{
+    background-color: white;
+    border-radius: 20px;
+    width: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 50px;
+    padding: 10px 5px;
+    border: 1px solid #C0C0C0;
+    color:rgb(75,0,130);
+    cursor: pointer;
+    font: {
+        size: 14px;
+        weight: 600;
+    }
+
+    &:disabled{
+        color: #C0C0C0;
+    }
+
+}

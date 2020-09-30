@@ -1,0 +1,19 @@
+.primary-input{
+    border: none;
+    border-bottom: 1px solid #C0C0C0;
+    padding-bottom: 15px;
+    display: flex;
+    text-align: center;
+    color:rgb(75,0,130);
+    font: {
+        weight: 600;
+        size: 15px;
+    }
+
+    &:focus{
+        outline: none;
+    }
+    &::placeholder{
+        color:#C0C0C0;
+    }
+}

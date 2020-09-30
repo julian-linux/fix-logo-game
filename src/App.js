@@ -1,7 +1,8 @@
 import React from 'react';
+import Home from './views/home';
 
 function App() {
-  return <div className="App">hola</div>;
+  return <Home />;
 }
 
 export default App;
