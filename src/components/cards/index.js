@@ -2,7 +2,7 @@ import React from 'react';
 import './cards.scss';
 import { useDrag, useDrop } from 'react-dnd';
 
-const EmptyCard = ({ accept = ['card'], item, onDrop }) => {
+const EmptyCard = ({ accept = ['card', 'placed-card'], item, onDrop }) => {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept,
     drop: onDrop,
@@ -13,7 +13,7 @@ const EmptyCard = ({ accept = ['card'], item, onDrop }) => {
   });
   console.log(isOver, canDrop);
   return (
-    <div ref={drop} className={`card-${!item ? 'empty' : 'filled'}`}>
+    <div ref={drop} className="card-empty">
       <img src={item} />
     </div>
   );
@@ -37,4 +37,18 @@ const UsedCard = () => {
   return <div className="card-filled" />;
 };
 
-export { EmptyCard, FilledCard, UsedCard };
+const PlacedCard = ({ image, id }) => {
+  const [{ opacity }, dragRef] = useDrag({
+    item: { type: 'placed-card', name: id },
+    collect: (monitor) => ({
+      opacity: monitor.isDragging() ? 0.5 : 1,
+    }),
+  });
+  return (
+    <div ref={dragRef} style={{ opacity }} className="card-filled">
+      <img src={image} />
+    </div>
+  );
+};
+
+export { EmptyCard, FilledCard, UsedCard, PlacedCard };
