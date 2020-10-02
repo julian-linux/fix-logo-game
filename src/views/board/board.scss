@@ -1,0 +1,15 @@
+.board{
+    &-main-container{
+        width: 100vw;
+        height:100vh;
+        padding: 20px 10%;
+        box-sizing: border-box
+    }
+
+    &-cards-container{
+        width: 80%;
+        display: flex;
+        margin: 5vh auto;
+        justify-content: space-between;
+    }
+}
