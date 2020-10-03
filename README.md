@@ -1,6 +1,6 @@
 ## Fix Logo Game
 
-This fun game puts to test your ability to rearrange the logo in the correct order in the least amount of time possible
+This fun game challenge your ability to rearrange a logo in the correct order in the least amount of time possible
 
 ### Access Method
 
