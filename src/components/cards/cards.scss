@@ -7,8 +7,8 @@
 
     &-empty{
         @extend .card;
-        background-color: rgb(224, 223, 223);
-        border: 1px dashed green;
+        background-color: rgb(231, 231, 231);
+        border: 1.5px dashed #13EBA2;
     }
 
     &-filled{

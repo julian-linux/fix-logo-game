@@ -1,20 +1,15 @@
 import * as types from '../../constants';
 
-const actionSetInitialState = () => ({
-  type: types.USER.ACTION_INITIAL_STATE,
-});
-
 const actionSetUser = (user) => ({
-  type: types.USER.ACTION_INITIAL_STATE,
+  type: types.USER.ACTION_SET_USER,
   payload: user,
 });
 
 const action = {
-  actionSetInitialState,
   actionSetUser,
 };
 
-const user = {
+export const user = {
   action,
 };
 

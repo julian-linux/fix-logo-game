@@ -1,34 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BoardView from './BoardView';
-import ZOOVU_O from '../../assets/zoovu-o.svg';
-import ZOOVU_U from '../../assets/zoovu-u.svg';
-import ZOOVU_V from '../../assets/zoovu-v.svg';
-import ZOOVU_Z from '../../assets/zoovu-z.svg';
+import {
+  getDragIndexOfArray,
+  shuffle,
+  checkCorrectPositionById,
+  checkCorrectPatternById,
+} from '../../utils';
+import { CORRECT_PATTERN, EMPTY_PATTER } from '../../constants';
+import Feedback from '../feedback';
+import { useHistory } from 'react-router-dom';
 
-const Board = () => {
-  const [paintFilled, setPainFilled] = useState([
-    { img: ZOOVU_O, id: 'o_1', isEmpty: false },
-    { img: ZOOVU_O, id: 'o_2', isEmpty: false },
-    { img: ZOOVU_V, id: 'V', isEmpty: false },
-    { img: ZOOVU_Z, id: 'Z', isEmpty: false },
-    { img: ZOOVU_U, id: 'u', isEmpty: false },
-  ]);
+const Board = ({ name }) => {
+  const [paintFilled, setPainFilled] = useState([]);
+  const [paintEmpty, setPaintEmpty] = useState([]);
+  const [count, setCount] = useState(0);
+  const [timer, setTimer] = useState(null);
+  const [countdown, setCountdown] = useState(null);
+  const [restart, setRestart] = useState(10);
+  const history = useHistory();
 
-  const [paintEmpty, setPaintEmpty] = useState([
-    { img: null, id: null, isEmpty: true },
-    { img: null, id: null, isEmpty: true },
-    { img: null, id: null, isEmpty: true },
-    { img: null, id: null, isEmpty: true },
-    { img: null, id: null, isEmpty: true },
-  ]);
+  useEffect(() => {
+    restartGame();
+    if (!name) {
+      history.push('/');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (restart === 0) {
+      setCountdown(clearInterval(countdown));
+      restartGame();
+    }
+  }, [restart]);
+
+  const restartGame = () => {
+    setPainFilled(shuffle(CORRECT_PATTERN));
+    setPaintEmpty(EMPTY_PATTER);
+    setCount(0);
+    setRestart(10);
+  };
 
   const [dragging, setDragging] = useState(null);
+
+  const onStartCount = () => {
+    startInterval();
+  };
+
+  const startInterval = () => {
+    setTimer(
+      setInterval(() => {
+        setCount((time) => time + 1);
+      }, 1000)
+    );
+  };
+
+  const startCountDown = () => {
+    setCountdown(
+      setInterval(() => {
+        setRestart((time) => time - 1);
+      }, 1000)
+    );
+  };
 
   const handleVerticalDrop = (emptyArr, filledArr, dropIndex, dragIndex) => {
     emptyArr.splice(dropIndex, 1, filledArr[dragIndex]);
     filledArr.splice(dragIndex, 1, { ...filledArr[dragIndex], isEmpty: true });
     setPainFilled([...filledArr]);
     setPaintEmpty([...emptyArr]);
+    checkPatternById(emptyArr);
   };
 
   const handleHorizontalDrop = (emptyArr, index, dragIndex) => {
@@ -37,51 +76,68 @@ const Board = () => {
     emptyArr.splice(index, 1, { ...dragged });
     emptyArr.splice(dragIndex, 1, { ...dropped });
     setPaintEmpty([...emptyArr]);
+    checkPatternById(emptyArr);
   };
 
-  const handleDrop = (item, index) => {
+  const onDrop = (item, index) => {
     const filledArr = [...paintFilled];
     const emptyArr = [...paintEmpty];
-    let card;
     let dragIndex;
     if (item.type === 'card') {
-      card = filledArr.filter((card_) => card_.id === item.name)[0];
-      dragIndex = filledArr.indexOf(card);
+      dragIndex = getDragIndexOfArray(filledArr, item);
       handleVerticalDrop(emptyArr, filledArr, index, dragIndex);
     } else {
-      card = emptyArr.filter((card_) => card_.id === item.name)[0];
-      dragIndex = emptyArr.indexOf(card);
+      dragIndex = getDragIndexOfArray(emptyArr, item);
       handleHorizontalDrop(emptyArr, index, dragIndex);
+    }
+    checkCorrectMove(item, index);
+  };
+
+  const onDragRearrange = (item) => {
+    const emptyArr = [...paintEmpty];
+    const dragIndex = getDragIndexOfArray(emptyArr, item);
+    setDragging(dragIndex);
+  };
+
+  const onDropRearrange = (item, index) => {
+    const emptyArr = [...paintEmpty];
+    const dragIndex = getDragIndexOfArray(emptyArr, item);
+    handleHorizontalDrop(emptyArr, index, dragIndex);
+    checkCorrectMove(item, index);
+  };
+
+  const endRearrange = () => setDragging(null);
+
+  const checkPatternById = (array) => {
+    if (checkCorrectPatternById(array, CORRECT_PATTERN)) {
+      setTimer(clearInterval(timer));
+      startCountDown();
     }
   };
 
-  const onDrag = (item, isOver) => {
-    const emptyArr = [...paintEmpty];
-    const card = emptyArr.filter((card_) => card_.id === item.name)[0];
-    const dragIndex = emptyArr.indexOf(card);
-    setDragging(dragIndex);
-    console.log(isOver);
+  const checkCorrectMove = (item, index) => {
+    if (!checkCorrectPositionById(item, index, CORRECT_PATTERN)) {
+      setCount((time) => time + 10);
+    }
   };
-
-  const handleDropPlaced = (item, index) => {
-    const emptyArr = [...paintEmpty];
-    const card = emptyArr.filter((card_) => card_.id === item.name)[0];
-    const dragIndex = emptyArr.indexOf(card);
-    handleHorizontalDrop(emptyArr, index, dragIndex);
-  };
-
-  const endDrop = () => setDragging(null);
 
   return (
-    <BoardView
-      handleDrop={handleDrop}
-      onDrag={onDrag}
-      handleDropPlaced={handleDropPlaced}
-      endDrop={endDrop}
-      dragging={dragging}
-      paintFilled={paintFilled}
-      paintEmpty={paintEmpty}
-    />
+    <>
+      <BoardView
+        onDrop={onDrop}
+        onDragRearrange={onDragRearrange}
+        onDropRearrange={onDropRearrange}
+        endRearrange={endRearrange}
+        dragging={dragging}
+        paintFilled={paintFilled}
+        paintEmpty={paintEmpty}
+        onStartCount={onStartCount}
+        count={count}
+        name={name}
+        restart={restart}
+      />
+      {restart !== 10 ? <Feedback time={restart} name={name} score={count} /> : null}
+    </>
   );
 };
 

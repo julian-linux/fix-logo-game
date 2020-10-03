@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import HomeView from './HomeView.js';
+import { useHistory } from 'react-router-dom';
 
-const Home = () => {
-  const [name, setName] = useState('');
+const Home = ({ actionSetUser, name }) => {
+  const history = useHistory();
 
   const onClickContinue = () => {
-    console.log('go to game view');
+    history.push('/board');
   };
 
   const onChangeName = (e) => {
-    setName(e.target.value);
+    actionSetUser(e.target.value);
   };
 
   return <HomeView name={name} onClickContinue={onClickContinue} onChangeName={onChangeName} />;

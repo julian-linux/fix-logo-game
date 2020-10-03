@@ -1,6 +1,6 @@
 import React from 'react';
-import Home from './views/home';
-import Board from './views/board';
+import Home from './store/containers/home';
+import Board from './store/containers/board';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
