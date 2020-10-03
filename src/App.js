@@ -2,7 +2,7 @@ import React from 'react';
 import Home from './store/containers/home';
 import Board from './store/containers/board';
 import Error from './views/error';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
   return (
