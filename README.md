@@ -4,7 +4,7 @@ This fun game challenge your ability to rearrange a logo in the correct order in
 
 ### Access Method
 
-To play you can download this repository and run `npm start` or go to the folder `build` and open the `i-want-to-play-a-game.html` file 
+To play you just need to download this repository and run `npm start` or go to the folder `build` and open the `i-want-to-play-a-game.html` file 
 
 
 ### Know more about the creating proccess
