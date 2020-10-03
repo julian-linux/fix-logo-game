@@ -9,7 +9,7 @@ To play you just need to download this repository and run `npm start` or go to t
 
 ### Know more about the creating proccess
 
-fix-logo-game was build using React and JavaScript as the main technologies. For the routing process it was used `react-router` and to make the information globally accessible it was used `redux`.
+fix-logo-game was build using React and JavaScript as the main technologies. For the routing process it was used `react-router` and to make the information globally accessible it was created a store using `redux`.
 The Drag and Drop feature was added using the `react-dnd` library.
 
 To meake this app easier to test and modify there were used the principles of Atomic Desing and Single Responsibility.
